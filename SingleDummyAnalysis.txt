@@ -1,0 +1,79 @@
+Single Dummy Analysis:
+
+NOTE: The current algorithm for analyzing hands is NOT going to work.  I need to figure out a method of
+specifying lines of play that will allow situations like the following to be specified:
+1. h-h-AH-h and h-h-QH-h are mapped to the same entry even though the KH is out.
+   so I cannot tell when to finesse and when to play the ace.
+
+To complete Play Analysis:
+* merge several solutions when showing final analysis 
+	5D lead for example has several solutions but there should be one entry for this analysis
+* In the May 24 hand S:5D-8D-2D-3D, W:4C-AC-7C-5C and S:5D-AD-2D-3D, W:4C-AC-8C-5C should be merged
+* In kantar #1 why is 8S->JS TC->7S only 50% - because N:TC-8C-KS-4C and N:TC-JC-7S-2C should be merged
+* In kantar #2 4C-5S only 70% - because N:5H-2H-AH-6H is merged with N:5H-2H-QH-7H  
+* verify assumption in CountResults() about how scoring works.  It may be wrong for EW plays. Look for example.  Document it too!
+
+New Feature List:
+* make play analysis contract always NS for simplicity??
+* use multi threads for analyze hands to reduce analysis time 
+* Add audio?  Including error sound for when you select an illegal card to play
+* add font with spades, hearts, clubs, diamond symbols - library does not support unicode unfortuately
+
+The algorithm for analyzing hands goes as follows.  I deal the specified number of hands using
+any restrictions placed on the hands and use the double dummy solver to determine how many of them
+can make the specified contract.  This is why it is important to specify some restrictions otherwise
+you get hands that would not likely match the bidding or those that make the contract impossible to 
+make.  In fact I recommend setting the depth to 1 and dealing 10-20 hands to see which ones fail to 
+make the contract.  Use these hands to set the restrictions.  Of course you can analyze hands where
+East or West are declarer but it is harder to make the restrictions for them, so North-South is the
+preferred direction.
+
+For those deals where the contract can be made I proceed playing the hand using the double dummy solver 
+for each players turn down to the depth specified for each hand.  This of course makes an assumption 
+that given enough depth the cards will be marked so that double dummy plays like dropping honors or
+finding the correct finesse will more likely be known.  With small depths this will not be true.
+In fact with small depths completely incorrect lines of play will occur.  For example, with depth=1:
+        S 8          
+        H Q94        
+        D J9762      
+        C AK         
+S                 S AJ         
+H KJ82            H T753       
+D A84             D KQT3       
+C 9864            C 7          
+        S QT9764     
+        H A6         
+        D 5          
+        C J5         
+5D and AH are 100% lines of play when in fact AH is only 50% because it depends on who has the KH.
+
+I collect all the lines of play and combine them into a tree using just a few criteria:
+1. The same player leads to the trick
+2. the same player wins the trick
+3. the same suit wins the trick
+This is not quite sufficient because we can get lines of play like the following:
+Where S,H,D,C to represent the suits and x to represent any card that is not trump
+and N,E,S,W to represent North, East, South and North hands.
+E:Tc-QC-xC-xC N:8S-xS-KS-x, S:AH-xH-xH-xH
+E:Tc-QC-xC-xC N:8S-xS-TS-x, S:KS-x-3S-JS
+These lines of play should not be combined because the KS is played later in the second line
+but has already been played in the first line.  So another rule is also used:
+4. We cannot combine lines of play when a card used to win a trick is played later
+We can of course combine parts of the lines of play into a tree as follows:
+E:TC-QC-xC-xC N:8S-xS-KS-xS S:AH-xH-xH-xH
+                            ....
+              N:8S-xS-TS-xS S:KS-x-3S-JS  
+                            ....       
+
+Because the processing can be very slow I use multiple threads to process each deal.  For a 
+system with 4 cores and 8 processors, we can use up to 8 threads to get a 4-5 speedup over using 
+one thread.
+
+I now combine all lines of play for each hand into one tree.  I keep a count of the number of 
+hands that reach the end node of the tree.  I now pass the count of hands up to the parents using
+the maximum number of times we reach the terminal nodes.  Of course using maximum is correct for 
+the declaring side because you would not choose inferior lines of play.  I use maximum for opponents 
+are hands where it is not possible to reach a terminal node.  For example if say West has AKQ of 
+diamonds, East can never win a diamond lead.  Other times it is possible that if West won the lead, 
+he would be forced to give up an overtrick which the double dummy solver would prevent.  The count 
+represents the percentage for this line of play.  

@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BridgeDealer", "BridgeDealer.vcxproj", "{72C9FCA7-237B-4294-81EC-6D7F2F5E7E3D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C6FE24C-354A-4DA5-8142-0B6920A775DA} = {9C6FE24C-354A-4DA5-8142-0B6920A775DA}
+		{2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F} = {2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibHaru", "..\PDFLibrary\LibHaru.vcxproj", "{2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DoubleDummySolver", "..\DoubleDummySolver\DoubleDummySolver.vcxproj", "{9C6FE24C-354A-4DA5-8142-0B6920A775DA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72C9FCA7-237B-4294-81EC-6D7F2F5E7E3D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{72C9FCA7-237B-4294-81EC-6D7F2F5E7E3D}.Debug|Win32.Build.0 = Debug|Win32
+		{72C9FCA7-237B-4294-81EC-6D7F2F5E7E3D}.Release|Win32.ActiveCfg = Release|Win32
+		{72C9FCA7-237B-4294-81EC-6D7F2F5E7E3D}.Release|Win32.Build.0 = Release|Win32
+		{2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F}.Debug|Win32.Build.0 = Debug|Win32
+		{2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F}.Release|Win32.ActiveCfg = Release|Win32
+		{2C3F02EF-CF73-4855-97E7-F5D2B9A48C2F}.Release|Win32.Build.0 = Release|Win32
+		{9C6FE24C-354A-4DA5-8142-0B6920A775DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C6FE24C-354A-4DA5-8142-0B6920A775DA}.Debug|Win32.Build.0 = Debug|Win32
+		{9C6FE24C-354A-4DA5-8142-0B6920A775DA}.Release|Win32.ActiveCfg = Release|Win32
+		{9C6FE24C-354A-4DA5-8142-0B6920A775DA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
